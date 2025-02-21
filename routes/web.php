@@ -9,7 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 // 🏥 Public Authentication Routes (Login, Register, Logout)
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+// Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
