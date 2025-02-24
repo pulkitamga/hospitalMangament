@@ -1,12 +1,13 @@
 <?php
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WorkLeaveController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\EmployeeController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WorkLeaveController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\Admin\UserRoleController;
 
 // 🏥 Public Authentication Routes (Login, Register, Logout)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -20,7 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // 🏥 Admin Panel Routes (Only accessible after login)
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard'); // सही व्यू पथ सेट करें
+        return view('admin.dashboard'); 
     })->name('dashboard');
 
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -36,7 +37,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::patch('/users/{user}', [UserController::class, 'update']);
 
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
+     
     // Work Leaves Listing Page
     Route::get('/work-leaves', [WorkLeaveController::class, 'index'])->name('work-leaves.index');
 
@@ -123,6 +124,12 @@ Route::post('/employees', [EmployeeController::class, 'store'])->name('employees
 Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
+//Roles Route
+Route::controller(UserRoleController::class)->group(function(){
+    Route::get('/role','index')->name('users.role');
+    Route::post('/role','store')->name('role.store');
+    Route::delete('/role/{id}','destroy')->name('roles.destroy');
+});
 
 });
 

@@ -47,7 +47,7 @@
                     </a>
                   </li>
                   <li class="menu-item">
-                    <a href="pages-account-settings-connections.html" class="menu-link">
+                    <a href="{{ route('users.role') }}" class="menu-link">
                       <div class="text-truncate" data-i18n="Connections">Role</div>
                     </a>
                   </li>
