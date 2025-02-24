@@ -60,6 +60,30 @@
             </div>
         </div>
     </div>
+
+    <!--Edit Modal-->
+    <div id="editRoleModal" class="modal fade" tabindex="-1" aria-labelledby="editRoleMOdalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" id="editRoleForm">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" id="editRoleId">
+                        <div class="mb-3">
+                            <label for="editRoleName" class="form-label">Role Name</label>
+                            <input type="text" class="form-control" id="editRoleName" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Role</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         //Add User Role
         document.addEventListener("DOMContentLoaded", function() {
@@ -102,6 +126,42 @@
             });
         });
 
+
+        //Edit Role
+        document.addEventListener("DOMContentLoaded",function(){
+         document.querySelectorAll('.edit-role').forEach(button =>{
+            button.addEventListener("click",function(){
+                let roleId=this.getAttribute("data-id");
+                let roleName=this.getAttribute("data-name");
+                document.getElementById("editRoleId").value=roleId;
+                document.getElementById("editRoleName").value=roleName;
+                new bootstrap.Modal(document.getElementById("editRoleModal")).show();
+            });
+         });
+
+         document.getElementById("editRoleForm").addEventListener("submit",function(e){
+            e.preventDefault();
+            let roleId=document.getElementById("editRoleId").value;
+            let roleName=document.getElementById("editRoleName").value;
+            
+            fetch(`/admin/role/${roleId}`,{
+                method:"PUT",
+                headers:{
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+                     "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name: roleName })
+            })
+            .then(response =>response.json())
+            .then(data =>{
+                toastr.success(data.message);
+                location.reload();
+            })
+            .catch(error => console.error("Error:", error));
+         })
+
+        });
         //Delete User Role
 
         document.addEventListener("DOMContentLoaded", function() {
