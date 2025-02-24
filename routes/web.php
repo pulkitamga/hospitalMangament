@@ -128,8 +128,9 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->
 Route::controller(UserRoleController::class)->group(function(){
     Route::get('/role','index')->name('users.role');
     Route::post('/role','store')->name('role.store');
-    Route::delete('/role/{id}','destroy')->name('roles.destroy');
-});
+    Route::delete('/role/{id}','destroy')->name('role.destroy');
 
+});
+//Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
 
