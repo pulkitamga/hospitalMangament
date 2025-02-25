@@ -32,6 +32,16 @@ class UserRoleController extends Controller
         return response()->json(['message' => 'Role added successfully!', 'role' => $role]);
     }
 
+    public function update(Request $request,$id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+        $role=Role::findOrFail($id);
+        $role->update(['name'=> $request->name]);
+        return response()->json(['message' => 'Role updated successfully!']);
+    }
+
     public function destroy($id)
     {
         $role = Role::findOrFail($id);
