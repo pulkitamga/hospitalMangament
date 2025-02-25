@@ -12,7 +12,11 @@ class UserRoleController extends Controller
 {
     public function index()
     {
+
         $roles = Role::all();
+
+        $roles = Role::where('status',1)->get();
+
         return view('admin.role.index', compact('roles'));
     }
 
