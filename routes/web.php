@@ -24,7 +24,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('admin.dashboard'); 
     })->name('dashboard');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+   // Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 
