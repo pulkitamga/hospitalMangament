@@ -31,6 +31,10 @@
                         <button class="btn rounded-pill btn-danger btn-sm delete-role" data-id="{{ $role->id }}">
                             <i class="fa fa-trash m-0"></i>
                         </button>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 772d19c (role commit)
                     </td>
                 </tr>
             @endforeach
@@ -60,6 +64,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <!--Edit Modal-->
     <div id="editRoleModal" class="modal fade" tabindex="-1" aria-labelledby="editRoleMOdalLabel" aria-hidden="true">
@@ -84,6 +89,8 @@
             </div>
         </div>
     </div>
+=======
+>>>>>>> 772d19c (role commit)
     <script>
         //Add User Role
         document.addEventListener("DOMContentLoaded", function() {
@@ -126,6 +133,7 @@
             });
         });
 
+<<<<<<< HEAD
 
         //Edit Role
         document.addEventListener("DOMContentLoaded",function(){
@@ -188,5 +196,39 @@
                 })
             })
         });
+=======
+        //Delete User Role
+
+        document.addEventListener("DOMContentLoaded", function() {
+    document.body.addEventListener("click", function(event) {
+        if (event.target.classList.contains("delete-role") || event.target.closest(".delete-role")) {
+            let button = event.target.closest(".delete-role");
+            let roleId = button.getAttribute("data-id");
+
+            console.log("Role id", roleId);
+            if (!confirm("Are you sure you want to delete this role?")) return;
+
+            fetch(`/role/${roleId}`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    "Accept": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    toastr.success(data.message);
+                    button.closest("tr").remove(); // Remove row on success
+                } else {
+                    toastr.error("Error deleting role!");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    });
+});
+
+>>>>>>> 772d19c (role commit)
     </script>
 @endsection

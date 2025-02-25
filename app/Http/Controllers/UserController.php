@@ -7,20 +7,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // 🏥 1. सभी यूजर्स की लिस्ट दिखाएं
     public function index()
     {
         $users = User::all();
         return view('admin.users.index', compact('users'));
     }
 
-    // 🏥 2. नया यूजर जोड़ने का फॉर्म दिखाएं
     public function create()
     {
         return view('admin.users.create');
     }
 
-    // 🏥 3. नया यूजर सेव करें
     public function store(Request $request)
     {
         $request->validate([
@@ -38,13 +35,11 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User added successfully.');
     }
 
-    // 🏥 4. किसी यूजर की डिटेल्स दिखाएं
     public function show(User $user)
     {
         return view('admin.users.show', compact('user'));
     }
 
-    // 🏥 5. यूजर को एडिट करने का फॉर्म दिखाएं
     public function edit(User $user)
     {
         return view('admin.users.edit', compact('user'));
