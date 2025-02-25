@@ -36,13 +36,15 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                                <td>Admin</td>
+                                <td>{{ $user->role->name ?? 'No Role Assigned' }}</td>
                                 <td>+917582060792</td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm" onclick="editUser({{ $user->id }})">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="deleteUser({{ $user->id }})">
+                                    <button class="btn btn-primary btn-sm rounded-pill edit-user"
+                                        data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                        data-email="{{ $user->email }}" data-role="{{ $user->role_id }}"
+                                        data-bs-toggle="modal" data-bs-target="#editUserModal"><i
+                                            class="fa fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm delete-user" data-id={{ $user->id }}>
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -67,32 +69,37 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label">User Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name">
                             <p class="text-danger"></p>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">User Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <input type="email" class="form-control" id="email" name="email">
+                            <p class="text-danger"></p>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="password" required>
-                                <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Generate</button>
+                                <input type="password" class="form-control" id="password" name="password">
+                                <button type="button" class="btn btn-outline-secondary"
+                                    onclick="generatePassword()">Generate</button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
-                                    <i id="passwordToggleIcon" class="bi bi-eye-slash"></i>
+                                    <i id="passwordToggleIcon" class="fa fa-eye-slash"></i>
                                 </button>
+
                             </div>
+                            <p class="text-danger"></p>
+
                         </div>
                         <div class="mb-3">
                             <label class="form-label">User Role</label>
                             <select name="user_role" class="form-control">
-                                <option value="2">User</option>
-                                <option value="3">Journalist</option>
-                                <option value="4">Blogger</option>
-                                <option value="5">Social Media Influencer</option>
-                                <option value="6">Local Writer</option>
+                                <option value="">-- Select Role --</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                @endforeach
                             </select>
+                            <p class="text-danger"></p>
                         </div>
                         <button type="submit" class="btn btn-primary">Add User</button>
                     </form>
@@ -102,7 +109,46 @@
     </div>
 
     <!-- Edit Modal (Dynamic Content) -->
-    <div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"></div>
+    <div id="editUserModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        @csrf
+                        @method('Put')
+                        <input type="hidden" name="user_id" id="edit_user_id">
+                        <div class="mb-3">
+                            <label class="form-label">User Name</label>
+                            <input type="text" class="form-control" id="edit_user_name" name="name">
+                            <p class="text-danger"></p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">User Email</label>
+                            <input type="email" class="form-control" id="edit_user_email" name="email" readonly>
+                            <p class="text-danger"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">User Role</label>
+                            <select name="user_role" class="form-control" id="edit_user_role">
+                                <option value="">-- Select Role --</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->id }}"
+                                        {{ $user->role_id == $role->id ? 'Selected' : '' }}>{{ $role->name }}</option>
+                                @endforeach
+                            </select>
+                            <p class="text-danger"></p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function generatePassword() {
@@ -119,10 +165,10 @@
             const toggleIcon = document.getElementById('passwordToggleIcon');
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
-                toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
             } else {
                 passwordField.type = 'password';
-                toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
             }
         }
 
@@ -135,41 +181,123 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         if (response.success) {
-                            location.reload();
+                            toastr.success(response.message);
+                            $('#userModal').modal('hide');
+
+                            // Reload the page after a short delay
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
                         } else {
-                            alert(response.error);
+                            toastr.error(response.error, 'Error');
                         }
                     },
                     error: function(xhr) {
                         console.error(xhr.responseJSON);
-                        alert('An error occurred!');
+                        if (xhr.status === 422) {
+                            $('.text-danger').text('');
+                            $.each(xhr.responseJSON.errors, function(key, value) {
+                                console.log("Field:", key, "Error:", value[0])
+                                let field = $("[name='" + key + "']");
+
+                                if (field.is('select')) {
+                                    field.closest('.mb-3').find('.text-danger').text(
+                                        value[0]);
+                                } else if (field.closest('.input-group').length) {
+                                    field.closest('.input-group').parent().find(
+                                            '.text-danger')
+                                        .text(value[0]);
+                                } else {
+                                    field.next('.text-danger').text(value[0]);
+                                }
+                            });
+                        } else {
+                            toastr.error('An error occurred!', 'Error');
+                        }
                     }
                 });
             });
         });
 
-        function editUser(id) {
-    $.ajax({
-        url: "{{ url('admin/users') }}/" + id + "/edit",
-        type: "GET",
-        success: function(response) {
-            $('#editModal').html(response).modal('show');
-        }
-    });
-}
+        //edit user
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll(".edit-user").forEach(button => {
+                button.addEventListener("click", function() {
+                    let userId = this.getAttribute('data-id');
+                    let userName = this.getAttribute('data-name');
+                    let userEmail = this.getAttribute('data-email');
+                    let userRole = this.getAttribute('data-role');
+                    document.getElementById("edit_user_id").value = userId;
+                    document.getElementById("edit_user_name").value = userName;
+                    document.getElementById("edit_user_email").value = userEmail;
+                    document.getElementById("edit_user_role").value = userRole;
+                    new bootstrap.Modal(document.getElementById("editRoleModal")).show();
+                })
 
 
-        function deleteUser(id) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                $.ajax({
-                    url: '{{ route('users.destroy', '') }}/' + id,
-                    type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function(response) {
+            })
+            document.getElementById("editUserForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                let userId = document.getElementById("edit_user_id").value;
+                let userName = document.getElementById("edit_user_name").value;
+                let userRole = document.getElementById("edit_user_role").value;
+                fetch(`/admin/users/${userId}`, {
+                        method: "PUT",
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            name: userName,
+                            role: userRole
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        toastr.success(data.message);
                         location.reload();
-                    }
-                });
-            }
-        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            })
+        })
+
+        //Delete User
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.addEventListener("click", function(event) {
+                if (event.target.classList.contains("delete-user") || event.target.closest(
+                    ".delete-user")) {
+                    let button = event.target.closest(".delete-user");
+                    let userId = button.getAttribute("data-id");
+
+                    console.log("User ID:", userId);
+                    if (!confirm("Are you sure you want to delete this user?")) return;
+
+                    fetch(`/admin/users/${userId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute("content"),
+                                "Accept": "application/json"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                toastr.success(data.message);
+                                button.closest("tr").remove(); // Remove the table row
+                            } else {
+                                toastr.error("Error deleting user!"); // Fixed message
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            toastr.error("Something went wrong. Please try again.");
+                        }); // Added missing semicolon
+                }
+            });
+        });
     </script>
 @endsection

@@ -31,10 +31,7 @@
                         <button class="btn rounded-pill btn-danger btn-sm delete-role" data-id="{{ $role->id }}">
                             <i class="fa fa-trash m-0"></i>
                         </button>
-<<<<<<< HEAD
-=======
 
->>>>>>> 772d19c (role commit)
                     </td>
                 </tr>
             @endforeach
@@ -64,7 +61,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 
     <!--Edit Modal-->
     <div id="editRoleModal" class="modal fade" tabindex="-1" aria-labelledby="editRoleMOdalLabel" aria-hidden="true">
@@ -89,8 +85,6 @@
             </div>
         </div>
     </div>
-=======
->>>>>>> 772d19c (role commit)
     <script>
         //Add User Role
         document.addEventListener("DOMContentLoaded", function() {
@@ -133,102 +127,74 @@
             });
         });
 
-<<<<<<< HEAD
-
-        //Edit Role
-        document.addEventListener("DOMContentLoaded",function(){
-         document.querySelectorAll('.edit-role').forEach(button =>{
-            button.addEventListener("click",function(){
-                let roleId=this.getAttribute("data-id");
-                let roleName=this.getAttribute("data-name");
-                document.getElementById("editRoleId").value=roleId;
-                document.getElementById("editRoleName").value=roleName;
-                new bootstrap.Modal(document.getElementById("editRoleModal")).show();
-            });
-         });
-
-         document.getElementById("editRoleForm").addEventListener("submit",function(e){
-            e.preventDefault();
-            let roleId=document.getElementById("editRoleId").value;
-            let roleName=document.getElementById("editRoleName").value;
-            
-            fetch(`/admin/role/${roleId}`,{
-                method:"PUT",
-                headers:{
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-                     "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ name: roleName })
-            })
-            .then(response =>response.json())
-            .then(data =>{
-                toastr.success(data.message);
-                location.reload();
-            })
-            .catch(error => console.error("Error:", error));
-         })
-
-        });
-        //Delete User Role
-
         document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll(".delete-role").forEach(button => {
+            document.querySelectorAll('.edit-role').forEach(button => {
                 button.addEventListener("click", function() {
                     let roleId = this.getAttribute("data-id");
-                    let token = document.querySelector('meta[name="csrf-token"]').getAttribute(
-                        'content');
-                    if (confirm("Are You sure you want to delete this role?")) {
-                        fetch(`/admin/role/${roleId}`, {
-                                method: "DELETE",
-                                headers: {
-                                    "X-CSRF-TOKEN": token,
-                                    "Content-Type": "application/json"
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                toastr.success(data.message);
-                                location.reload();
-                            })
-                            .catch(error => console.error("Error:", error));
-                    }
-                })
+                    let roleName = this.getAttribute("data-name");
+                    document.getElementById("editRoleId").value = roleId;
+                    document.getElementById("editRoleName").value = roleName;
+                    new bootstrap.Modal(document.getElementById("editRoleModal")).show();
+                });
+            });
+
+            document.getElementById("editRoleForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                let roleId = document.getElementById("editRoleId").value;
+                let roleName = document.getElementById("editRoleName").value;
+
+                fetch(`/admin/role/${roleId}`, {
+                        method: "PUT",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            name: roleName
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        toastr.success(data.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error("Error:", error));
             })
+
         });
-=======
+
         //Delete User Role
-
         document.addEventListener("DOMContentLoaded", function() {
-    document.body.addEventListener("click", function(event) {
-        if (event.target.classList.contains("delete-role") || event.target.closest(".delete-role")) {
-            let button = event.target.closest(".delete-role");
-            let roleId = button.getAttribute("data-id");
+            document.body.addEventListener("click", function(event) {
+                if (event.target.classList.contains("delete-role") || event.target.closest(
+                    ".delete-role")) {
+                    let button = event.target.closest(".delete-role");
+                    let roleId = button.getAttribute("data-id");
 
-            console.log("Role id", roleId);
-            if (!confirm("Are you sure you want to delete this role?")) return;
+                    console.log("Role id", roleId);
+                    if (!confirm("Are you sure you want to delete this role?")) return;
 
-            fetch(`/role/${roleId}`, {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-                    "Accept": "application/json"
+                    fetch(`/admin/role/${roleId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute("content"),
+                                "Accept": "application/json"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                toastr.success(data.message);
+                                button.closest("tr").remove(); // Remove row on success
+                            } else {
+                                toastr.error("Error deleting role!");
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    toastr.success(data.message);
-                    button.closest("tr").remove(); // Remove row on success
-                } else {
-                    toastr.error("Error deleting role!");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-    });
-});
-
->>>>>>> 772d19c (role commit)
+            });
+        });
     </script>
 @endsection
