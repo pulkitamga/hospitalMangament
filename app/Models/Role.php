@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     
@@ -15,4 +16,7 @@ class Role extends Model
     
     protected $fillable=['name','status'];
 
+=======
+    protected $fillable =['name','status'];
+>>>>>>> developer-A
 }
