@@ -12,9 +12,6 @@ class UserRoleController extends Controller
 {
     public function index()
     {
-
-        $roles = Role::all();
-
         $roles = Role::where('status',1)->get();
 
         return view('admin.role.index', compact('roles'));
@@ -35,6 +32,7 @@ class UserRoleController extends Controller
         $role = Role::create(['name' => $request->name]);
         return response()->json(['message' => 'Role added successfully!', 'role' => $role]);
     }
+
 
     public function update(Request $request,$id)
     {

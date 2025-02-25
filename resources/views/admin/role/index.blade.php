@@ -165,7 +165,44 @@
         });
 
         //Delete User Role
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.edit-role').forEach(button => {
+                button.addEventListener("click", function() {
+                    let roleId = this.getAttribute("data-id");
+                    let roleName = this.getAttribute("data-name");
+                    document.getElementById("editRoleId").value = roleId;
+                    document.getElementById("editRoleName").value = roleName;
+                    new bootstrap.Modal(document.getElementById("editRoleModal")).show();
+                });
+            });
 
+            document.getElementById("editRoleForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                let roleId = document.getElementById("editRoleId").value;
+                let roleName = document.getElementById("editRoleName").value;
+
+                fetch(`/admin/role/${roleId}`, {
+                        method: "PUT",
+                        headers: {
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute("content"),
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            name: roleName
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        toastr.success(data.message);
+                        location.reload();
+                    })
+                    .catch(error => console.error("Error:", error));
+            })
+
+        });
+
+        //Delete User Role
         document.addEventListener("DOMContentLoaded", function() {
             document.body.addEventListener("click", function(event) {
                 if (event.target.classList.contains("delete-role") || event.target.closest(
@@ -176,7 +213,8 @@
                     console.log("Role id", roleId);
                     if (!confirm("Are you sure you want to delete this role?")) return;
 
-                    fetch(`/role/${roleId}`, {
+
+                    fetch(`/admin/role/${roleId}`, {
                             method: "DELETE",
                             headers: {
                                 "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
