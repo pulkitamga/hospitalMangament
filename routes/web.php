@@ -7,7 +7,8 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WorkLeaveController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\Admin\UserRoleController;
+use App\Http\Controllers\RoleController;
+// use App\Http\Controllers\RoleController;
 
 // 🏥 Public Authentication Routes (Login, Register, Logout)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -120,12 +121,17 @@ Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
 //Roles Route
-Route::controller(UserRoleController::class)->group(function(){
-    Route::get('/role','index')->name('users.role');
-    Route::post('/role','store')->name('role.store');
-    Route::put('/role/{id}','update')->name('role.update');
-    Route::delete('/role/{id}','destroy')->name('roles.destroy');
-});
+
+    Route::get('/role', [RoleController::class, 'index'])->name('users.role');
+    Route::post('/role',[RoleController::class, 'store'])->name('role.store');
+    Route::put('/role/{id}',[RoleController::class, 'update'])->name('role.update');
+    Route::delete('/role/{id}',[RoleController::class, 'destroy'])->name('roles.destroy');
+
+// Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+// Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+// Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+// Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+// Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
 //Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
