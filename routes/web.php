@@ -8,8 +8,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\WorkLeaveController;
 use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\RoleController;
-// use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Admin\UserRoleController;
 
 // 🏥 Public Authentication Routes (Login, Register, Logout)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -25,10 +24,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard'); // सही व्यू पथ सेट करें
     })->name('dashboard');
-
-   
-  
-
     Route::controller(UserController::class)->group(function(){
         Route::get('/users','index')->name('users.index');
         Route::post('/users','store')->name('users.store');
@@ -124,10 +119,17 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->
 
 //Roles Route
 
-    Route::get('/role', [RoleController::class, 'index'])->name('users.role');
-    Route::post('/role',[RoleController::class, 'store'])->name('role.store');
-    Route::put('/role/{id}',[RoleController::class, 'update'])->name('role.update');
-    Route::delete('/role/{id}',[RoleController::class, 'destroy'])->name('roles.destroy');
+Route::controller(UserRoleController::class)->group(function(){
+    Route::get('/role','index')->name('users.role');
+    Route::post('/role','store')->name('role.store');
+    Route::put('/role/{id}','update')->name('role.update');
+    Route::delete('/role/{id}','destroy')->name('role.destroy');
+    //Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 
+});
+
+
+
+//Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
 
