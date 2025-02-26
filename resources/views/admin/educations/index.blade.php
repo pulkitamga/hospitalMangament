@@ -55,7 +55,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
+<<<<<<< HEAD
                 <h5 class="modal-title">Add Education</h5>
+=======
+                <h5 class="modal-title">Education</h5>
+>>>>>>> c310d12 (new data)
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
