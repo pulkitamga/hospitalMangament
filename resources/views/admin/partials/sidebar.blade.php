@@ -47,7 +47,11 @@
                     </a>
                   </li>
                   <li class="menu-item">
+<<<<<<< HEAD
                     <a href="pages-account-settings-connections.html" class="menu-link">
+=======
+                    <a href="{{ route('users.role') }}" class="menu-link">
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                       <div class="text-truncate" data-i18n="Connections">Role</div>
                     </a>
                   </li>

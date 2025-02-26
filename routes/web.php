@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WorkLeaveController;
@@ -11,6 +12,22 @@ use Illuminate\Support\Facades\Route;
 // 🏥 Public Authentication Routes (Login, Register, Logout)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 // Route::post('/login', [AuthController::class, 'login']);
+=======
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\WorkLeaveController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\RoleController;
+// use App\Http\Controllers\RoleController;
+
+// 🏥 Public Authentication Routes (Login, Register, Logout)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
@@ -20,6 +37,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // 🏥 Admin Panel Routes (Only accessible after login)
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
+<<<<<<< HEAD
         return view('admin.dashboard'); // सही व्यू पथ सेट करें
     })->name('dashboard');
 
@@ -37,6 +55,20 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+=======
+        return view('admin.dashboard'); 
+    })->name('dashboard');
+
+
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/users','index')->name('users.index');
+        Route::post('/users','store')->name('users.store');
+        Route::put('/users/{id}','update')->name('users.update');
+        Route::delete('/users/{id}','destroy')->name('users.destroy');
+    });
+
+     
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
     // Work Leaves Listing Page
     Route::get('/work-leaves', [WorkLeaveController::class, 'index'])->name('work-leaves.index');
 
@@ -123,6 +155,23 @@ Route::post('/employees', [EmployeeController::class, 'store'])->name('employees
 Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
+<<<<<<< HEAD
 
+=======
+//Roles Route
+
+    Route::get('/role', [RoleController::class, 'index'])->name('users.role');
+    Route::post('/role',[RoleController::class, 'store'])->name('role.store');
+    Route::put('/role/{id}',[RoleController::class, 'update'])->name('role.update');
+    Route::delete('/role/{id}',[RoleController::class, 'destroy'])->name('roles.destroy');
+
+// Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+// Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+// Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+// Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+// Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+//Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
 });
 
