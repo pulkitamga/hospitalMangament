@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -21,9 +22,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // 🏥 Admin Panel Routes (Only accessible after login)
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard'); 
+        return view('admin.dashboard'); // सही व्यू पथ सेट करें
     })->name('dashboard');
-
     Route::controller(UserController::class)->group(function(){
         Route::get('/users','index')->name('users.index');
         Route::post('/users','store')->name('users.store');
@@ -118,11 +118,13 @@ Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name
 Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
 //Roles Route
+
 Route::controller(UserRoleController::class)->group(function(){
     Route::get('/role','index')->name('users.role');
     Route::post('/role','store')->name('role.store');
     Route::put('/role/{id}','update')->name('role.update');
     Route::delete('/role/{id}','destroy')->name('role.destroy');
+    //Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 
 });
 
