@@ -24,13 +24,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('admin.dashboard'); 
     })->name('dashboard');
 
-
     Route::controller(UserController::class)->group(function(){
         Route::get('/users','index')->name('users.index');
         Route::post('/users','store')->name('users.store');
         Route::put('/users/{id}','update')->name('users.update');
         Route::delete('/users/{id}','destroy')->name('users.destroy');
     });
+
+
 
      
     // Work Leaves Listing Page
@@ -124,8 +125,11 @@ Route::controller(UserRoleController::class)->group(function(){
     Route::get('/role','index')->name('users.role');
     Route::post('/role','store')->name('role.store');
     Route::put('/role/{id}','update')->name('role.update');
-    Route::delete('/role/{id}','destroy')->name('roles.destroy');
+    Route::delete('/role/{id}','destroy')->name('role.destroy');
+
 });
+
+
 
 //Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
