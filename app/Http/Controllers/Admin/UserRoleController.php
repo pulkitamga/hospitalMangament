@@ -54,7 +54,7 @@ class UserRoleController extends Controller
         ]);
     }
 
-    $role->status = 0; // Soft delete
+    $role->status = 0; // Soft delete Abc
     $role->save();
 
     return response()->json([
