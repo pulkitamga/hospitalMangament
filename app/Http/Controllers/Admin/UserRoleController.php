@@ -33,10 +33,7 @@ class UserRoleController extends Controller
         return response()->json(['message' => 'Role added successfully!', 'role' => $role]);
     }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> developer-A
     public function update(Request $request,$id)
     {
         $request->validate([
