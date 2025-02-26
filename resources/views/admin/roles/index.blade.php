@@ -86,8 +86,7 @@
         </div>
     </div>
     <script>
-        //Add User Role
-        document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("addRoleForm").addEventListener("submit", function(event) {
                 event.preventDefault();
 
@@ -235,5 +234,6 @@
                 }
             });
         });
+    
     </script>
-@endsection
+@endsection 

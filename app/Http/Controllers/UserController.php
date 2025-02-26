@@ -1,16 +1,20 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $users = User::with('role')->where('id', '!=', auth()->id())->get();
+        $roles = Role::where('status', 1)->get();
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     public function create()
@@ -20,19 +24,25 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
+            'user_role' => 'required|exists:roles,id',
         ]);
-
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $request->user_role,
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User added successfully.');
+        return response()->json(['success' => true, 'message' => 'User added successfully.']);
     }
 
     public function show(User $user)
@@ -45,27 +55,37 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    // 🏥 6. यूजर अपडेट करें
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'name' => 'required|string|max:255',
+            'role' => 'required|exists:roles,id',
         ]);
 
+        $user = User::findOrFail($id);
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
+            'role_id' => $request->role
         ]);
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        return response()->json(['message' => 'User updated successfully!']);
     }
 
-    // 🏥 7. यूजर को डिलीट करें
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "User Deleted",
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error deleting user!'
+            ], 500);
+        }
     }
 }

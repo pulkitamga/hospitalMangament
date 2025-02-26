@@ -25,19 +25,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('admin.dashboard'); 
     })->name('dashboard');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/users','index')->name('users.index');
+        Route::post('/users','store')->name('users.store');
+        Route::put('/users/{id}','update')->name('users.update');
+        Route::delete('/users/{id}','destroy')->name('users.destroy');
+    });
 
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-
-    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::patch('/users/{user}', [UserController::class, 'update']);
-
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
      
     // Work Leaves Listing Page
     Route::get('/work-leaves', [WorkLeaveController::class, 'index'])->name('work-leaves.index');
@@ -138,5 +133,6 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->
 // Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
 // Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
+//Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
 
