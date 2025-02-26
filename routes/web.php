@@ -126,13 +126,5 @@ Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->
     Route::post('/role',[RoleController::class, 'store'])->name('role.store');
     Route::put('/role/{id}',[RoleController::class, 'update'])->name('role.update');
     Route::delete('/role/{id}',[RoleController::class, 'destroy'])->name('roles.destroy');
-
-// Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-// Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
-// Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-// Route::put('/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
-// Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-
-//Route::delete('/role/{id}', [UserRoleController::class, 'destroy'])->name('role.destroy');
 });
 
