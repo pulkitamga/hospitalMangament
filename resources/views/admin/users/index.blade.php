@@ -36,6 +36,15 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
+<<<<<<< HEAD
+                                <td>Admin</td>
+                                <td>+917582060792</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="editUser({{ $user->id }})">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteUser({{ $user->id }})">
+=======
                                 <td>{{ $user->role->name ?? 'No Role Assigned' }}</td>
                                 <td>+917582060792</td>
                                 <td>
@@ -45,6 +54,7 @@
                                         data-bs-toggle="modal" data-bs-target="#editUserModal"><i
                                             class="fa fa-edit"></i></button>
                                     <button class="btn btn-danger btn-sm delete-user" data-id={{ $user->id }}>
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -69,17 +79,33 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label">User Name</label>
+<<<<<<< HEAD
+                            <input type="text" class="form-control" id="name" name="name" required>
+=======
                             <input type="text" class="form-control" id="name" name="name">
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                             <p class="text-danger"></p>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">User Email</label>
+<<<<<<< HEAD
+                            <input type="email" class="form-control" id="email" name="email" required>
+=======
                             <input type="email" class="form-control" id="email" name="email">
                             <p class="text-danger"></p>
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <div class="input-group">
+<<<<<<< HEAD
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="generatePassword()">Generate</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+                                    <i id="passwordToggleIcon" class="bi bi-eye-slash"></i>
+                                </button>
+                            </div>
+=======
                                 <input type="password" class="form-control" id="password" name="password">
                                 <button type="button" class="btn btn-outline-secondary"
                                     onclick="generatePassword()">Generate</button>
@@ -90,16 +116,26 @@
                             </div>
                             <p class="text-danger"></p>
 
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                         </div>
                         <div class="mb-3">
                             <label class="form-label">User Role</label>
                             <select name="user_role" class="form-control">
+<<<<<<< HEAD
+                                <option value="2">User</option>
+                                <option value="3">Journalist</option>
+                                <option value="4">Blogger</option>
+                                <option value="5">Social Media Influencer</option>
+                                <option value="6">Local Writer</option>
+                            </select>
+=======
                                 <option value="">-- Select Role --</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                                 @endforeach
                             </select>
                             <p class="text-danger"></p>
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                         </div>
                         <button type="submit" class="btn btn-primary">Add User</button>
                     </form>
@@ -109,6 +145,9 @@
     </div>
 
     <!-- Edit Modal (Dynamic Content) -->
+<<<<<<< HEAD
+    <div id="editModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"></div>
+=======
     <div id="editUserModal" class="modal fade" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -149,6 +188,7 @@
             </div>
         </div>
     </div>
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
 
     <script>
         function generatePassword() {
@@ -165,10 +205,17 @@
             const toggleIcon = document.getElementById('passwordToggleIcon');
             if (passwordField.type === 'password') {
                 passwordField.type = 'text';
+<<<<<<< HEAD
+                toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+=======
                 toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
             } else {
                 passwordField.type = 'password';
                 toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
             }
         }
 
@@ -181,6 +228,11 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         if (response.success) {
+<<<<<<< HEAD
+                            location.reload();
+                        } else {
+                            alert(response.error);
+=======
                             toastr.success(response.message);
                             $('#userModal').modal('hide');
 
@@ -190,10 +242,14 @@
                             }, 1000);
                         } else {
                             toastr.error(response.error, 'Error');
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                         }
                     },
                     error: function(xhr) {
                         console.error(xhr.responseJSON);
+<<<<<<< HEAD
+                        alert('An error occurred!');
+=======
                         if (xhr.status === 422) {
                             $('.text-danger').text('');
                             $.each(xhr.responseJSON.errors, function(key, value) {
@@ -214,11 +270,37 @@
                         } else {
                             toastr.error('An error occurred!', 'Error');
                         }
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
                     }
                 });
             });
         });
 
+<<<<<<< HEAD
+        function editUser(id) {
+    $.ajax({
+        url: "{{ url('admin/users') }}/" + id + "/edit",
+        type: "GET",
+        success: function(response) {
+            $('#editModal').html(response).modal('show');
+        }
+    });
+}
+
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                $.ajax({
+                    url: '{{ route('users.destroy', '') }}/' + id,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        location.reload();
+                    }
+                });
+            }
+        }
+=======
         //edit user
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll(".edit-user").forEach(button => {
@@ -299,5 +381,6 @@
                 }
             });
         });
+>>>>>>> e0f085aecc617219fd989588f47e657c868410a9
     </script>
 @endsection
